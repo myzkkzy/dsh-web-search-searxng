@@ -25,18 +25,18 @@ for (const language of ['en', 'ja']) {
   });
 }
 
-test('keeps the Japanese and English guides with mutual language links and full instructions', () => {
-  const japanese = read('README.md');
-  const english = read('README.en.md');
-  assert.match(japanese, /\[English\]\(README\.en\.md\)/);
-  assert.match(english, /\[日本語\]\(README\.md\)/);
+test('keeps English as the default guide and Japanese translation with mutual language links and full instructions', () => {
+  const japanese = read('README.ja.md');
+  const english = read('README.md');
+  assert.match(japanese, /\[English\]\(README\.md\)/);
+  assert.match(english, /\[日本語\]\(README\.ja\.md\)/);
   for (const title of ['導入', 'SearXNG の起動', '設定', '元に戻す・削除', '開発・テスト']) {
     assert.ok(japanese.includes('## ' + title));
   }
   for (const title of ['Installation', 'Starting SearXNG', 'Settings', 'Restoring defaults and removal', 'Development and tests']) {
     assert.ok(english.includes('## ' + title));
   }
-  assert.ok(included('README.md') && included('README.en.md'));
+  assert.ok(included('README.md') && included('README.ja.md'));
 });
 
 test('declares the existing Harness locale dependency without adding external runtime dependencies', () => {

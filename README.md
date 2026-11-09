@@ -1,101 +1,99 @@
-# DeepSeek Harness 用 SearXNG 検索プラグイン
+# SearXNG web search plugin for DeepSeek Harness
 
-日本語 | [English](README.en.md)
+English | [日本語](README.ja.md)
 
-同じ PC で動作する SearXNG を、DeepSeek Harness の標準 `web_search` から使う自作プラグインです。
-API キーや既成の検索プラグインは不要です。日英対応の設定画面を Plugins 内に追加します。Harness 本体の表示言語に連動し、その他の言語では英語を表示します。
+A custom plugin that connects DeepSeek Harness's standard `web_search` tool to a SearXNG instance running on the same PC.
+No API key or third-party search plugin is required. Settings support English and Japanese and follow the Harness display language; other languages fall back to English.
 
-- 対象環境: DeepSeek Harness Desktop **0.2.2-rc.1**
-- 動作確認済み OS: Windows
-- 開発・テスト: Node.js 22.19 以降
+- Target environment: DeepSeek Harness Desktop **0.2.2-rc.1**
+- Tested OS: Windows
+- Development and tests: Node.js 22.19 or later
 
-実行には Harness 本体に同梱されたランタイムと共有モジュールを使用します。Node.js の別途インストールは不要です。
-ソースとブラウザー用の完成物を同梱しているため、ビルドや `npm install` は不要です。
+Execution uses the runtime and shared modules bundled with Harness. A separate Node.js installation is not required.
+The source and browser artifact are included, so no build or `npm install` is required.
 
-## 導入
+## Installation
 
-Harness の **Plugins → Add plugin** で、プラグインをダウンロード・展開したディレクトリ（`package.json` がある場所）を指定します。
+In Harness, open **Plugins → Add plugin** and select the directory where you downloaded or extracted the plugin (the directory containing `package.json`).
 
-登録後に **Enable now** で有効化します。必要と表示された場合は Harness を再起動してください。
-プラグイン詳細を開くと SearXNG の設定画面が表示されます。
+Choose **Enable now** after registration. Restart Harness if prompted.
+Open the plugin details to access its settings form.
 
-CLI を使う場合は Harness を完全に終了してから、同梱コマンドで登録できます。
-ウィンドウの × だけでは終了しないため、トレイの Quit / 終了を使用してください。
+To register it through the bundled CLI, fully quit Harness first.
+The window's × button may leave it running; use Quit / Exit from the system tray.
 
-以下のコマンド例では、`<DeepSeek Harness インストールディレクトリ>` と `<プラグインのディレクトリ>` を、それぞれ実際のパスに置き換えてください。山括弧も含めて置き換えてください。
+Replace `<DeepSeek Harness installation directory>` and `<plugin directory>` in the command examples with your actual paths. Replace the entire placeholder, including its angle brackets.
 
 ```powershell
-& '<DeepSeek Harness インストールディレクトリ>\resources\runtime\cli\bin\dsh.cmd' plugin --profile desktop add '<プラグインのディレクトリ>'
+& '<DeepSeek Harness installation directory>\resources\runtime\cli\bin\dsh.cmd' plugin --profile desktop add '<plugin directory>'
 ```
 
-## SearXNG の起動
+## Starting SearXNG
 
-利用している導入方式の手順に従って SearXNG を起動し、検索中は Harness から接続できる状態を維持してください。
-起動方法や設定方法は、利用している構成の手順または [SearXNG の公式導入手順](https://docs.searxng.org/admin/installation.html) を参照してください。
+Start SearXNG according to the instructions for your deployment method and keep it reachable from Harness while searching.
+For startup and configuration details, follow the instructions for your setup or the [official SearXNG installation guide](https://docs.searxng.org/admin/installation.html).
 
-このプラグインには、JSON 形式の検索結果を取得できる SearXNG が必要です。必要に応じて SearXNG 側で JSON 形式の出力を有効にしてください。
-検索 API の詳細は [公式 Search API ドキュメント](https://docs.searxng.org/dev/search_api.html) を参照してください。
+This plugin requires a SearXNG instance that can return JSON search results. Enable JSON output in SearXNG if necessary.
+See the [official Search API documentation](https://docs.searxng.org/dev/search_api.html) for API details.
 
-接続確認では、次の `<SearXNG の Base URL>` を、使用するインスタンスの Base URL に山括弧も含めて置き換え、JSON の検索結果が返ることを確認します。
+To check the connection, replace `<SearXNG Base URL>` below, including its angle brackets, with your instance's Base URL and confirm that the request returns JSON search results.
 
 ```text
-<SearXNG の Base URL>/search?q=SearXNG&format=json
+<SearXNG Base URL>/search?q=SearXNG&format=json
 ```
 
-## 設定
+## Settings
 
-**Plugins → SearXNG Web 検索**（パッケージ名: `dsh-web-search-searxng`） で変更し、**設定を保存**を押します。
-その後 **SearXNG を検索に使う**で標準の検索先を切り替えます。
+Open **Plugins → SearXNG Web Search** (package: `dsh-web-search-searxng`), edit the form, and select **Save settings**.
+Then select **Use SearXNG for search** to change the standard search provider.
 
-フォームは Harness 本体の表示言語に連動します。言語を切り替えても入力中の値を保持し、通知の表示も更新します。
-画面の表示言語と、検索条件の「検索言語」はそれぞれ設定できます。
+The form follows the Harness display language. Switching languages preserves unsaved values and updates notifications.
+Display language and the search language field are configured separately.
 
-| 項目 | 初期値 | 説明 |
+| Field | Default | Description |
 | --- | --- | --- |
-| Base URL | `http://127.0.0.1:8888` | `/search` やクエリを含まないインスタンス URL |
-| 最大検索結果数 | `8` | 1〜50。標準ツールの結果上限も適用 |
-| 検索言語 | 空欄 | SearXNG の既定値。指定例: `ja-JP` |
-| 使用エンジン | 空欄 | SearXNG の既定構成。指定例: `bing,duckduckgo` |
-| タイムアウト | `15000` | ミリ秒。100〜120000 |
+| Base URL | `http://127.0.0.1:8888` | Instance URL without `/search` or a query |
+| Maximum results | `8` | 1–50; the standard tool's result limit also applies |
+| Search language | Blank | SearXNG default; example: `ja-JP` |
+| Search engines | Blank | SearXNG defaults; example: `bing,duckduckgo` |
+| Timeout | `15000` | Milliseconds; 100–120000 |
 
-変更は次の検索から反映され、Harness の再起動後も保持されます。
-保存前の編集は検索に使われません。保存が拒否された場合は編集内容を保持し、
-**編集を破棄**で最新の保存済み設定へ戻せます。
-検索先の切り替えは `web.searchProvider` だけを更新し、本文取得の設定には触れません。
+Saved changes apply to the next search and survive Harness restarts.
+Unsaved edits do not affect searches. Rejected saves preserve your edits;
+select **Discard changes** to load the latest saved settings.
+Changing the search provider only updates `web.searchProvider` and preserves the fetch provider.
 
-会話で Web 検索を依頼すると、SearXNG の検索結果が引用可能な URL・タイトル・抜粋として返ります。
-SearXNG 自体のエンジン構成と、各エンジンの稼働状況が検索結果を決めます。
-通信失敗時に他の検索サービスへ自動で切り替える処理はありません。
-検索処理がスローする例外は、英語のメッセージと固定のエラーコードを持ちます。フォームの入力エラーは表示言語に従います。
+When you request a web search in a conversation, SearXNG results are returned as URLs, titles, and snippets that can be cited.
+Results depend on SearXNG's engine configuration and each engine's availability.
+Connection failures do not trigger an automatic switch to another search service.
+Provider exceptions use English messages and stable error codes; form validation follows the display language.
 
-## 元に戻す・削除
+## Restoring defaults and removal
 
-プラグインを無効化・削除する前に、設定画面で **既定の検索に戻す**を押します。
-その後 Plugins から無効化・削除します。ソースディレクトリはそのまま残せます。
+Before disabling or removing the plugin, select **Restore default search** in its settings.
+Then disable or remove it from Plugins. You can keep the source directory.
 
-CLI で削除する場合も、先に検索先を戻し、Harness を完全に終了してから実行してください。
+For CLI removal, restore the search provider first and fully quit Harness before running:
 
 ```powershell
-& '<DeepSeek Harness インストールディレクトリ>\resources\runtime\cli\bin\dsh.cmd' plugin --profile desktop remove dsh-web-search-searxng
+& '<DeepSeek Harness installation directory>\resources\runtime\cli\bin\dsh.cmd' plugin --profile desktop remove dsh-web-search-searxng
 ```
 
-## 開発・テスト
+## Development and tests
 
 ```powershell
-Set-Location '<プラグインのディレクトリ>'
+Set-Location '<plugin directory>'
 node --test
-node --check index.js
-node --check provider.js
-node --check client.js
+npm run check
 ```
 
-Node 標準のテスト機能で模擬 HTTP サーバーを起動し、検索と失敗時の契約を検証します。
-設定画面は保存・検索先の切り替え・競合・入力検証・言語切り替え・編集中の値の保持を検証します。
-パッケージの検証では、README の代わりに各言語の短い説明文が選ばれる設定を確認します。外部サービスへの接続や API キーは不要です。
+Tests use Node's built-in test runner and a mock HTTP server to verify searches and failure handling.
+Settings tests cover saving, provider selection, conflicts, validation, language changes, and draft preservation.
+Package tests verify that each locale selects a short description instead of the README. No external services or API keys are needed.
 
-Host エントリー: `index.js`、検索処理: `provider.js`、ブラウザーエントリー: `client.js`。
-設定のエントリー ID は `web-search-searxng`、検索プロバイダー ID は `searxng-local` です。
+Host entry: `index.js`; search implementation: `provider.js`; browser entry: `client.js`.
+The settings entry ID is `web-search-searxng`, and the provider ID is `searxng-local`.
 
-## ライセンス
+## License
 
-このプロジェクトは [MIT ライセンス](LICENSE) の下で公開されています。
+This project is licensed under the [MIT License](LICENSE).
