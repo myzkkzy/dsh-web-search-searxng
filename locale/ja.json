@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "SearXNG Web 検索",
+    "description": "指定した SearXNG を使う、API キー不要の Web 検索。",
+    "detail": "docs/overview.ja.md"
+  }
+}

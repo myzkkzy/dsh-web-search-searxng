@@ -1,0 +1,50 @@
+{
+  "name": "dsh-web-search-searxng",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "description": "Local SearXNG search provider with English and Japanese settings for DeepSeek Harness.",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./provider": "./provider.js",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "provider.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "locale",
+    "docs",
+    "README.en.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check index.js && node --check provider.js && node --check client.js"
+  },
+  "engines": {
+    "node": ">=22.19.0",
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.1.0",
+    "@deepseek-ai/schemastery": "~3.19.0",
+    "@deepseek-ai/dsh-web": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-plugin-manager"
+      ],
+      "platform": "web"
+    }
+  }
+}

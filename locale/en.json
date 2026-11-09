@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "SearXNG Web Search",
+    "description": "Search with your SearXNG instance without an API key.",
+    "detail": "docs/overview.en.md"
+  }
+}
