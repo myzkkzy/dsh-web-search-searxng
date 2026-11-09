@@ -95,3 +95,7 @@ Node 標準のテスト機能で模擬 HTTP サーバーを起動し、検索と
 
 Host エントリー: `index.js`、検索処理: `provider.js`、ブラウザーエントリー: `client.js`。
 設定のエントリー ID は `web-search-searxng`、検索プロバイダー ID は `searxng-local` です。
+
+## ライセンス
+
+このプロジェクトは [MIT ライセンス](LICENSE) の下で公開されています。

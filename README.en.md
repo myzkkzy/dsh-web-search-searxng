@@ -93,3 +93,7 @@ Package tests verify that each locale selects a short description instead of the
 
 Host entry: `index.js`; search implementation: `provider.js`; browser entry: `client.js`.
 The settings entry ID is `web-search-searxng`, and the provider ID is `searxng-local`.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

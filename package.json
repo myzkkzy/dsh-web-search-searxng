@@ -2,6 +2,7 @@
   "name": "dsh-web-search-searxng",
   "version": "0.1.1",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "Local SearXNG search provider with English and Japanese settings for DeepSeek Harness.",
   "main": "index.js",
@@ -19,7 +20,8 @@
     "README.md",
     "locale",
     "docs",
-    "README.en.md"
+    "README.en.md",
+    "LICENSE"
   ],
   "scripts": {
     "test": "node --test",
